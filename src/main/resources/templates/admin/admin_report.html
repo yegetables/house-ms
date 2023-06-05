@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="admin/module/_header"></div>
+<div class="wrapper">
+    <!-- 菜单栏模块 -->
+    <div th:replace="admin/module/_sidebar"></div>
+    <div class="content-wrapper">
+        <style type="text/css" rel="stylesheet">
+
+            #btnNewPost {
+                margin-left: 4px;
+                padding: 3px 6px;
+                position: relative;
+                top: -4px;
+                border: 1px solid #ccc;
+                border-radius: 2px;
+                background: #fff;
+                text-shadow: none;
+                font-weight: 600;
+                font-size: 12px;
+                line-height: normal;
+                color: #3c8dbc;
+                cursor: pointer;
+                transition: all .2s ease-in-out
+            }
+
+            #btnNewPost:hover {
+                background: #3c8dbc;
+                color: #fff
+            }
+
+            .label {
+                background-color: #d6cdcd;
+            }
+
+            .box-body {
+                padding: 0;
+            }
+
+            .box {
+                border-top: 0;
+            }
+        </style>
+        <section class="content-header">
+            <h1 style="display: inline-block;">
+                举报信息管理
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a data-pjax="true" href="/admin">
+                        <i class="fa fa-dashboard"></i> 首页</a>
+                </li>
+                <li class="active">举报信息列表</li>
+            </ol>
+        </section>
+        <section class="content container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-primary">
+                        <div class="box-body table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-2">举报人</th>
+                                    <th class="col-md-2">违规类型</th>
+                                    <th class="col-md-3">举报房屋</th>
+                                    <th class="col-md-1">状态</th>
+                                    <th class="col-md-2">举报时间</th>
+                                    <th class="col-md-2">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:id="'report-'+${report.id}" th:each="report : ${reports}">
+                                    <td>
+                                        <a th:href="${'/admin/user/info?userId='+report.user.id}" target="_blank">[[${report.user.userDisplayName}]]</a>
+                                    </td>
+                                    <td>
+                                        [[${report.type}]]
+                                    </td>
+                                    <td>
+                                        <a th:href="${'/post/'+report.post.id}" target="_blank">[[${report.post.postTitle}]]</a>
+                                    </td>
+                                    <td>
+                                        <span th:if="${report.status == 0}" class="text-primary">待审核</span>
+                                        <span th:if="${report.status == 1}" class="text-success">审核通过</span>
+                                        <span th:if="${report.status == 2}" class="text-warning">审核不通过</span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${#dates.format(report.createTime,'yyyy/MM/dd')}"></span>
+                                    </td>
+                                    <td>
+                                        <a th:href="'/admin/report/info?id='+${report.id}"
+                                           class="btn btn-primary btn-xs"
+                                           target="_blank">查看</a>
+                                        <button class="btn btn-success btn-xs " th:if="${report.status == 0}"
+                                                th:onclick="'examine('+${report.id}+','+'1)'">通过
+                                        </button>
+                                        <button class="btn btn-warning btn-xs " th:if="${report.status == 0}"
+                                                th:onclick="'examine('+${report.id}+','+'2)'">不通过
+                                        </button>
+                                        <button class="btn btn-danger btn-xs "
+                                                th:onclick="'removeIt('+${report.id}+')'">删除
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix">
+                            <div class="no-margin pull-left">
+                                第 [[${pageInfo.current}]] / [[${pageInfo.pages}]] 页
+                            </div>
+                            <ul class="pagination no-margin pull-right">
+                                <li><a data-pjax="true" th:classappend="${pageInfo.current == 1 ? 'disabled' : ''}"
+                                       class="btn btn-sm"
+                                       href="/admin/report">
+                                    首页
+                                </a>
+                                </li>
+                                <li><a data-pjax="true" class="btn btn-sm"
+                                       th:classappend="${pageInfo.current == 1 ? 'disabled' : ''}"
+                                       th:href="'/admin/report?page='+${pageInfo.current-1}">
+                                    上一页
+                                </a>
+                                </li>
+                                <li><a data-pjax="true" class="btn btn-sm"
+                                       th:classappend="${pageInfo.current >= pageInfo.pages ? 'disabled' : ''}"
+                                       th:href="'/admin/report?page='+${pageInfo.current+1}">
+                                    下一页
+                                </a>
+                                </li>
+                                <li><a data-pjax="true" class="btn btn-sm"
+                                       th:classappend="${pageInfo.current >= pageInfo.pages ? 'disabled' : ''}"
+                                       th:href="'/admin/report?page='+${pageInfo.pages}">
+                                    尾页
+                                </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+
+            function removeIt(id) {
+                layer.confirm('请确认是否删除', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/admin/report/delete',
+                        async: false,
+                        data: {
+                            'id': id
+                        },
+                        success: function (data) {
+                            if (data.code == 0) {
+                                showMsg(data.msg, "error", 1000);
+                            } else {
+                                showMsgAndReload(data.msg, "success", 2000);
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+
+            function examine(id, status) {
+                let name = status == 1 ? '通过' : '不通过';
+                layer.confirm('请确认是否审核' + name + '该举报', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/admin/report/examine',
+                        async: false,
+                        data: {
+                            'id': id,
+                            'status': status
+                        },
+                        success: function (data) {
+                            if (data.code == 0) {
+                                showMsg(data.msg, "error", 1000);
+                            } else {
+                                showMsgAndReload(data.msg, "success", 2000);
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+
+
+        </script>
+    </div>
+</div>
+<div th:replace="admin/module/_footer"></div>
