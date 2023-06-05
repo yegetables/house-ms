@@ -49,6 +49,7 @@ public class OrderController extends BaseController {
 
     /**
      * 创建订单
+     *
      * @param postId
      * @param endDateStr
      * @return
@@ -113,6 +114,13 @@ public class OrderController extends BaseController {
         return JsonResult.success("订单创建成功", order.getId());
     }
 
+    /**
+     * 查找订单
+     *
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/order/{id}")
     public String order(@PathVariable("id") Long id, Model model) {
         Order order = orderService.get(id);
@@ -142,6 +150,7 @@ public class OrderController extends BaseController {
 
     /**
      * 电子合同(查看合同)
+     *
      * @param orderId
      * @return
      */
@@ -178,6 +187,7 @@ public class OrderController extends BaseController {
 
     /**
      * 下载合同
+     *
      * @param orderId
      * @param response
      */
@@ -230,6 +240,7 @@ public class OrderController extends BaseController {
 
     /**
      * 支付页面
+     *
      * @param orderId
      * @param model
      * @return
@@ -271,6 +282,7 @@ public class OrderController extends BaseController {
 
     /**
      * 支付
+     *
      * @return orderId
      */
     @PostMapping("/order/pay")
@@ -327,5 +339,6 @@ public class OrderController extends BaseController {
         financeRecordService.insert(financeRecord2);
         return JsonResult.success("支付成功", order.getId());
     }
+
 
 }
