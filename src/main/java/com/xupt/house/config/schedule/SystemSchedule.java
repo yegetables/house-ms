@@ -47,8 +47,6 @@ public class SystemSchedule {
     public void updatePostStatus() {
         List<Order> orderList = orderMapper.findOverDueOrder();
         for (Order order : orderList) {
-
-
             // 更新房屋状态
             Post post = postMapper.selectById(order.getPostId());
             if (post == null) {

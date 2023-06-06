@@ -27,6 +27,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
 
 
     PermissionService permissionService = null;
+
     private PermissionService permissionService() {
         if (permissionService == null) {
             permissionService = (PermissionService) SpringUtil.getBean("permissionServiceImpl");
@@ -46,7 +47,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             return false;
         }
 
-        if(requestURL.contains("/file/upload")) {
+        if (requestURL.contains("/file/upload")) {
             return true;
         }
         //从session里读取当前用户的权限URL列表
@@ -72,9 +73,8 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
 
 
     public static boolean isAjax(HttpServletRequest httpRequest) {
-        return (httpRequest.getHeader("X-Requested-With") != null
-                && "XMLHttpRequest"
-                .equals(httpRequest.getHeader("X-Requested-With").toString()));
+        return "XMLHttpRequest"
+                .equals(httpRequest.getHeader("X-Requested-With"));
     }
 
 }

@@ -30,6 +30,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MyRealm extends AuthorizingRealm {
 
+    //Subjrct:用户主体（登录，注销，判断授权等等一些的方法）（把操作交给SecurityManager）
+    //
+    //SecurityManager:安全管理器（关联Realm）
+    //
+    //Realm:Shiro连接数据的桥梁（操作查询数据库或配置文件，获取用户的信息）
+    
     @Autowired
     @Lazy
     private UserService userService;
@@ -44,6 +50,7 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 认证信息(身份验证) Authentication 是用来验证用户身份
+     * 执行一些认证逻辑
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
@@ -83,6 +90,12 @@ public class MyRealm extends AuthorizingRealm {
     }
 
 
+    /**
+     * 执行一些授权逻辑
+     *
+     * @param principals the primary identifying principals of the AuthorizationInfo that should be retrieved.
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
