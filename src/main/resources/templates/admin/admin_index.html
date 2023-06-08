@@ -26,3 +26,21 @@
 </div>
 <div th:replace="admin/module/_footer"></div>
 
+<script>
+    function f() {
+        console.log(1111)
+        $.ajax({
+            type: 'GET',
+            url: '/admin/analysis/categorys',
+            async: false,
+            success: function (data) {
+                console.log("success", data);
+            },
+            error: function (data) {
+                console.log("error", data);
+            }
+        })
+    }
+
+    f();
+</script>
