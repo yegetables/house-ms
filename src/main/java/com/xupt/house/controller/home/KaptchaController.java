@@ -21,7 +21,13 @@ public class KaptchaController extends BaseController {
     @Autowired
     private Producer captchaProducer;
 
-
+    /**
+     * 获取验证码图片
+     *
+     * @param response
+     * @param session
+     * @throws Exception
+     */
     @GetMapping("/getKaptchaImage")
     public void getKaptchaImage(HttpServletResponse response, HttpSession session) throws Exception {
 

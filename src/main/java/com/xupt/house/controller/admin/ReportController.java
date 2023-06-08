@@ -68,7 +68,7 @@ public class ReportController extends BaseController {
 
 
     /**
-     * 处理删除举报的请求
+     * 查看举报信息
      *
      * @param reportId 举报编号
      * @return 重定向到/admin/report
@@ -120,6 +120,4 @@ public class ReportController extends BaseController {
         }
         return JsonResult.success("操作成功");
     }
-
-
 }
