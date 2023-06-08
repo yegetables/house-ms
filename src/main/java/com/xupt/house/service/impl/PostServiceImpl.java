@@ -30,6 +30,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> findPostByCondition(Post condition) {
+        Page<Post> page = new Page<>(0, 100000L);
+        return postMapper.findPostByCondition(condition, page);
+    }
+
+    @Override
     public Page<Post> findByRentUserId(Long userId, Page<Post> page) {
         List<Post> postList = postMapper.findByRentUserId(userId, page);
         return page.setRecords(postList);

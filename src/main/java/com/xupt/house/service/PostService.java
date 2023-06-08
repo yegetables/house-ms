@@ -19,6 +19,8 @@ public interface PostService extends BaseService<Post, Long> {
      */
     Page<Post> findPostByCondition(Post condition, Page<Post> page);
 
+    List<Post> findPostByCondition(Post condition);
+
 
     /**
      * 根据租客userId查询
