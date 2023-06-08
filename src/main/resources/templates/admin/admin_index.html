@@ -6,14 +6,13 @@
     <!-- 菜单栏模块 -->
     <div th:replace="admin/module/_sidebar"></div>
     <div class="content-wrapper">
-        <div  id="radioDiv">
+        <div onclick=" f(!dom.checked)">
             <label>是否售出&nbsp;&nbsp; :</label>
             <label >
-                <input type="radio" name="value" value="true" checked='checked'>已售出
+                <input type="radio" name="value" value="true" >已售出
             </label>
-
             <label >
-                <input type="radio" name="value"  value="false">未售出
+                <input type="radio" id="radioDiv" name="value"  value="false" checked='checked'>未售出
             </label>
         </div>
         <section class="content container-fluid" style="display: flex">
@@ -26,14 +25,14 @@
 </div>
 <div th:replace="admin/module/_footer"></div>
 <script>
-    function graph() {
+    function graph(data) {
         let chartDom = document.getElementById('graph1');
         let myChart = echarts.init(chartDom);
         let option;
         option = {
             title: [
                 {
-                    text: 'Radial Polar Bar Label Position (middle)'
+                    text: '售出各种类型房屋扇形图'
                 }
             ],
             tooltip: {
@@ -68,10 +67,7 @@
                     labelLine: {
                         show: true
                     },
-                    data: [
-                        { value: 1048, name: 'Search Engine' },
-                        { value: 735, name: 'Direct' },
-                    ]
+                    data,
                 }
             ]
         };
@@ -85,7 +81,7 @@
         option = {
             title: [
                 {
-                    text: 'Radial Polar Bar Label Position (middle)'
+                    text: '各个城市房屋售出情况柱状图'
                 }
             ],
             xAxis: {
@@ -109,17 +105,27 @@
 
         option && myChart.setOption(option);
     }
-    function f() {
+    function f(isSale) {
         $.ajax({
             type: 'GET',
-            url: '/admin/analysis/categorys?isSale=false',
+            url: `/admin/analysis/categorys?isSale=${isSale}`,
             async: false,
             success: function (data) {
                 console.log(data);
-                graph();
-                graph2();
+                let obj=[];
+                for(let i of data.result.categorys)
+                {
+                    obj.push({name:i.cateName})
+                }
+                for(let i in data.result.scores)
+                {
+                    obj[i].value=data.result.scores[i];
+                }
+                graph(obj);
             }
         })
     }
-    f();
+    var dom=document.getElementById('radioDiv');
+    graph2();
+    f(!dom.checked);
 </script>
