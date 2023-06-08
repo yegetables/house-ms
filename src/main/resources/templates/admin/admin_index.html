@@ -1,46 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js" ></script>
 <div th:replace="admin/module/_header"></div>
 <div class="wrapper">
     <!-- 菜单栏模块 -->
     <div th:replace="admin/module/_sidebar"></div>
     <div class="content-wrapper">
-        <section class="content-header">
-            <h1 style="display: inline-block;">首页</h1>
-            <ol class="breadcrumb">
-                <li>
-                    <a data-pjax="true" href="/admin">
-                        <i class="fa fa-dashboard"></i> 首页</a>
-                </li>
-            </ol>
-        </section>
-        <section class="content container-fluid">
-            <div class="row">
-                <div class="col-xs-12">
-                    欢迎访问ManLand房屋管理系统
-                </div>
-                <div class="col-xs-12"></div>
+        <div  id="radioDiv">
+            <label>是否售出&nbsp;&nbsp; :</label>
+            <label >
+                <input type="radio" name="value" value="true" checked='checked'>已售出
+            </label>
+
+            <label >
+                <input type="radio" name="value"  value="false">未售出
+            </label>
+        </div>
+        <section class="content container-fluid" style="display: flex">
+            <div id="graph1" style="width:500px;height:500px">
+            </div>
+            <div id="graph2" style="width:500px;height:500px">
             </div>
         </section>
     </div>
 </div>
 <div th:replace="admin/module/_footer"></div>
-
 <script>
+    function graph() {
+        let chartDom = document.getElementById('graph1');
+        let myChart = echarts.init(chartDom);
+        let option;
+        option = {
+            title: [
+                {
+                    text: 'Radial Polar Bar Label Position (middle)'
+                }
+            ],
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 40,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: true
+                    },
+                    data: [
+                        { value: 1048, name: 'Search Engine' },
+                        { value: 735, name: 'Direct' },
+                    ]
+                }
+            ]
+        };
+        option && myChart.setOption(option);
+    }
+    function graph2() {
+        let chartDom = document.getElementById('graph2');
+        let myChart = echarts.init(chartDom);
+        let option;
+
+        option = {
+            title: [
+                {
+                    text: 'Radial Polar Bar Label Position (middle)'
+                }
+            ],
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'bar',
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(180, 180, 180, 0.2)'
+                    }
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+    }
     function f() {
-        console.log(1111)
         $.ajax({
             type: 'GET',
-            url: '/admin/analysis/categorys',
+            url: '/admin/analysis/categorys?isSale=false',
             async: false,
             success: function (data) {
-                console.log("success", data);
-            },
-            error: function (data) {
-                console.log("error", data);
+                console.log(data);
+                graph();
+                graph2();
             }
         })
     }
-
     f();
 </script>
