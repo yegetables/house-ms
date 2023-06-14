@@ -16,10 +16,10 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySql配置
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/manland?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://mariadb-house:3306/manland?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
     username: root
-    password: root
+    password: 7355608
   thymeleaf:
     mode: HTML
     cache: false

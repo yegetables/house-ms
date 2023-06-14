@@ -1,0 +1,39 @@
+version: "3"
+services:
+  webapp:
+    container_name: house-webapp
+    build:
+      context: .
+    #      args:
+    #        - IMAGE_TAG=latest
+    #        - IMAGE_NAME=house
+    ports:
+      - "8080:8080"
+    depends_on:
+      #      - redis
+      - mariadb-house
+
+  #  redis:
+  #    image: redis:latest
+  #    restart: always
+  #    ports:
+  #      - "6389:6379"
+  #    volumes:
+  #      - /redis/redis.conf:/etc/redis/redis.conf
+  #    command: redis-server /etc/redis/redis.conf
+
+  mariadb-house:
+    image: mariadb:latest
+    container_name: mariadb-house
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "7355608"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "manland"
+    #      MYSQL_USER: 'root'
+    #      MYSQL_PASS: '123456'
+    ports:
+      - "3306:3306"
+    volumes:
+      #      - "/data/mysql/data:/var/lib/mysql"
+      - "./src/main/resources/database/:/docker-entrypoint-initdb.d/"

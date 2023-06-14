@@ -49,9 +49,8 @@ public class AnalysisController extends BaseController {
     @ResponseBody
     @Transactional
     public JsonResult categorys(@Param("isSale") Boolean isSale) {
-        System.out.println("isSale=" + isSale);
-
-
+//        System.out.println("isSale=" + isSale);
+        if (isSale == null) isSale = false;
         AnalysizesResult analysizesResult = new AnalysizesResult();
         analysizesResult.setCategorys(categoryService.findAll());
         int count = analysizesResult.getCategorys().size();
@@ -72,12 +71,11 @@ public class AnalysisController extends BaseController {
         }
 
         analysizesResult.setScores(scores);
-        System.out.println(JsonResult.error("ss", analysizesResult));
+        System.out.println(JsonResult.success("analysis/categorys", analysizesResult));
         return JsonResult.success("success", analysizesResult);
     }
 
     
-
     @GetMapping("/cities")
     @ResponseBody
     public JsonResult cities() {
@@ -99,7 +97,8 @@ public class AnalysisController extends BaseController {
             cityCount.put(city.getCityName(),i);
         }
 
-        return JsonResult.success("success",cityCount);
+        System.out.println(JsonResult.success("analysis/cities", cityCount));
+        return JsonResult.success("success", cityCount);
     }
 
 
